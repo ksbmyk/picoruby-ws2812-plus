@@ -10,8 +10,8 @@
 /*
  * WS2812._convert
  * Apply brightness scaling and color order conversion using instance variables
- * @pixel_packed == 0: returns byte Array [c1, c2, c3, ...] (for RMT)
- * @pixel_packed != 0: returns 32-bit packed Array [0xC1C2C300, ...] (for PIO)
+ * @rmt == nil (PIO): returns 32-bit packed Array [0xC1C2C300, ...]
+ * @rmt != nil (RMT): returns byte Array [c1, c2, c3, ...]
  */
 static void
 c__convert(mrbc_vm *vm, mrbc_value *v, int argc)
@@ -20,7 +20,8 @@ c__convert(mrbc_vm *vm, mrbc_value *v, int argc)
     int brightness = mrbc_integer(GETIV(brightness));
     mrbc_sym rgb_sym = mrbc_str_to_symid("rgb");
     int color_order = (GETIV(order).sym_id == rgb_sym) ? WS2812_ORDER_RGB : WS2812_ORDER_GRB;
-    int pack32 = mrbc_integer(GETIV(pixel_packed));
+    /* @rmt == nil means PIO is used, which requires 32-bit packed pixels */
+    int pack32 = (mrbc_type(GETIV(rmt)) == MRBC_TT_NIL);
 
     if (mrbc_type(data) != MRBC_TT_ARRAY) {
         mrbc_raise(vm, MRBC_CLASS(ArgumentError), "data must be an Array");
