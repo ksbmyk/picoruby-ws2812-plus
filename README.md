@@ -38,6 +38,8 @@ conf.gem github: 'ksbmyk/picoruby-ws2812-plus', branch: 'main'
 ## Usage
 
 ```ruby
+require 'ws2812-plus'
+
 # Initialize (specify GPIO pin and number of LEDs)
 led = WS2812.new(pin: 25, num: 64)
 
